@@ -15,10 +15,8 @@ obj.password = password
 var json = JSON.stringify(obj)
 
 ipcRenderer.send("channelPost",json)
-ipcRenderer.on("channelPost-r",(e,args) => {
-    console.log("Success: " + args)
+
 })
-
-
-
+ipcRenderer.on("channelPost-r",(e,args) => {
+    alert("Success: " + args)
 })

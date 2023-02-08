@@ -34,6 +34,8 @@ const createWindow = () => {
       }
     })
     
+    //request.write(args)
+
     request.on('response', (response) => {
       console.log(`STATUS: ${response.statusCode}`)
       console.log(`HEADERS: ${JSON.stringify(response.headers)}`)
@@ -48,8 +50,7 @@ const createWindow = () => {
         console.log('No more data in response.')
       })
     })
-    request.write(args)
-    request.end()
+    request.end(args)
   })
 
   //Initialize the application with the given window.
