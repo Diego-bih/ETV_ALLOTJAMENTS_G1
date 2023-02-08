@@ -1,0 +1,28 @@
+{
+  "name": "etv_allotjaments_g1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Diego-bih/ETV_ALLOTJAMENTS_G1.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Diego-bih/ETV_ALLOTJAMENTS_G1/issues"
+  },
+  "homepage": "https://github.com/Diego-bih/ETV_ALLOTJAMENTS_G1#readme",
+  "devDependencies": {
+    "electron": "^23.0.0"
+  },
+  "dependencies": {
+    "@electron/remote": "^2.0.9",
+    "gridjs": "^6.0.6",
+    "jquery": "^3.6.3",
+    "nodemon": "^2.0.20"
+  }
+}
