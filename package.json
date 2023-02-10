@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "watch": "nodemon --watch ./ --ext js,json,html --exec electron ."
   },
   "repository": {
     "type": "git",
@@ -23,6 +24,7 @@
     "@electron/remote": "^2.0.9",
     "gridjs": "^6.0.6",
     "jquery": "^3.6.3",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "watch": "^1.0.2"
   }
 }

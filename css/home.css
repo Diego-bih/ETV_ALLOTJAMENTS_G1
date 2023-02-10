@@ -1,12 +1,29 @@
+/*Border box: This makes sure that the padding and border are included in the total width and height of the elements.*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Raleway;
+}
+
 body {
-    background: #DADADE
-  }
+  background: #DADADE;
+}
+
+/*The div has display grid to make the layout easy simple and approachable to the user*/
+/*Responsive grid: The template columns are repeat autofit to repeat as many columns on a row without overflow with the implemented range of width values(of a column). Then it wraps when all columns of a row can not shrink less than the minimum value defined */
 .card {
     /* Add shadows to create the "card" effect */
     box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
-    width: 260px;
-    height: 260px;
+    margin: 0 auto;
+    display: grid;
+    max-width: 260px;
+    max-height: 260px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-auto-rows: 180px;
+    grid-gap: 20px;
+    padding-bottom: 70px;
   }
   
   /* On mouse-over, add a deeper shadow */
@@ -18,3 +35,11 @@ body {
   .container {
     padding: 2px 16px;
   }
+
+  /*When the screen is less than 480px wide, make the font size of the input place holder to 10px to fit the container */
+@media screen and (max-width: 480px) {
+  input::placeholder {
+    font-size: 10px;
+  }
+}
+

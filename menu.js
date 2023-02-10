@@ -25,7 +25,7 @@ const template = [
   {
     label:"Login",
         click: () => { 
-            const {win} = require('./main.js')
+          const {win} = require('./main.js')
           const win2 = new BrowserWindow({
             webPreferences:{
                 contextIsolation: false,

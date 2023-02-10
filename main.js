@@ -43,8 +43,15 @@ const createWindow = () => {
         console.log(`BODY: ${chunk}`)
         //console.log(json.data.token)
         var json = JSON.parse(chunk);
-        console.log(json.data.token)
-        e.sender.send("channelPost-r", json.data.token)
+        if(response.statusCode == 200){
+          console.log(json.data.token)
+          e.sender.send("channelPost-r", json.data.usuari.nom)
+      }
+        else{
+          var error = true;
+          e.sender.send("channelPost-r", error)
+          
+        }
       })
       response.on('end', () => {
         console.log('No more data in response.')
@@ -60,7 +67,7 @@ const createWindow = () => {
         const { net } = require('electron')
         const request = net.request({
           method: 'GET',
-          url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/1'
+          url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/2'
         })
         console.log()
         

@@ -17,6 +17,13 @@ var json = JSON.stringify(obj)
 ipcRenderer.send("channelPost",json)
 
 })
+
 ipcRenderer.on("channelPost-r",(e,args) => {
-    alert("Success: " + args)
+    var t = true
+    if(args == t){
+        console.log("Ha ocurrit un problema")
+    }
+    else{
+        console.log("Hello: " + args )
+    }
 })
