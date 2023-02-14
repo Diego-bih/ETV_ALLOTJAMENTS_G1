@@ -60,23 +60,21 @@ const createWindow = () => {
   })
 
   //Initialize the application with the given window.
-  const data = []
+  var data = []
   app.whenReady().then(() => {
     ipcMain.on("channelInfo",(e,args) =>{
         console.log(args)
 
         const request = net.request({
           method: 'GET',
-          url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/2'
+          url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/fotos'
         })
 
         request.on('response', (response) => {
           response.on('data', (chunk) => {
             //data.push(chunk)
             var json = JSON.parse(chunk);
-            data.push(json.data)
-            e.sender.send("channeldata", data)
-            e.sender.send("channelInfo-r1",json)
+            e.sender.send("channelInfo-r1",json.data)
           })
           response.on('end', () => {
             console.log('No more data in response.')
@@ -84,32 +82,6 @@ const createWindow = () => {
         })
 
         request.end()
-
-        console.log(data)
-        for(var i = 1;i < 10; i++){
-          var url = 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/' + i
-          console.log(url)
-          const request2 = net.request({
-            method: 'GET',
-            url: url
-          })
-             request2.on('response', (response) => {
-              response.on('data', (chunk) => {
-                var json = JSON.parse(chunk);
-                if(json.data.fotos[0] == null){
-                  console.log('Url is empty')
-                }else{
-                  console.log(`BODY: ${json.data.fotos[0].url}`)
-                }
-
-              })
-              response.on('end', () => {
-                console.log('No more data in response2.')
-              })
-            })
-            request2.end()
-        }
-        
       })
     createWindow() 
   })

@@ -4,25 +4,19 @@ function getInfo(info){
     document.getElementById("municipi").innerText = info.data.municipi.municipi
     document.getElementById("image").setAttribute('src', info.data.fotos[0].url)*/
       console.log(info)
-      //info.forEach(info => {  
-        let container = $('.card')
-        let a = $(`<img src="${info.data.fotos[0].url}" id="image" style="width:100%">`)
-        let b = $(`<div class="container"></div>`)
-        let c = $(`<h4 id ="nom"><b>${info.data.nom}</b></h4>`)
-        let d = $(`<p id ="municipi">${info.data.municipi.municipi}</p>`)
-        container.append(a,b.append(c,d))    
-    
-   // });
-  
-    /*
-    const grid = new Grid({
-      data: [info]
-    }).render(document.getElementById("wrapper"));*/
-          
-    /*let container = $(".image")
-          //For every year, append in the container
-          let a = $(`<p>${info}</p>`)
-          container.append(a)*/
+      //info.forEach(info => {
+        let container = $('.cards')
+        for(var i = 0; i< info.length;i++){
+        let obj = info[i];
+        let li = $(`<li class="cards_item"></li>`)
+        let card = $(`<div class ="card"></div>`)
+        let image = $(`<div class="card_image"><img src="${obj.url}"></div>`)
+        let cardcontent = $(`<div class="card_content"></div>`)
+        let cardtitle = $(`<h2 class="card_title">${obj.allotjament.nom}</h2>`)
+        let text = $(`<p class="card_text">${obj.allotjament.descripcio}</p>`)
+        let button = $(`<button class="btn card_btn">Read More</button>`)
+        container.append(li.append(card.append(image,cardcontent.append(cardtitle,text,button))))
+      }
   }
 
 module.exports = {
