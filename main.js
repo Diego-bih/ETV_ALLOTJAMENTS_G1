@@ -87,5 +87,27 @@ const createWindow = () => {
     require("@electron/remote/main").enable(window.webContents)
 })
 
+ipcMain.on("request1",(e,id)=>{
+  const { net } = require('electron')
+  const request = net.request(`http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/${id}`)
+
+  request.on('response', (response) => {
+   console.log(`STATUS: ${response.statusCode}`)
+    
+    response.on("data", (chunk) => {
+      console.log(`BODY: ${chunk}`)
+      e.sender.send("request-res",`${chunk}`)
+    })
+
+    response.on('end', () => {
+      console.log('No more data in response.')
+      request.end()
+    })
+  })
+    
+})
+
+
+
   //Disable security warning showed on console.log
   process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
