@@ -1,6 +1,7 @@
 const { app, BrowserWindow,Menu,ipcMain} = require('electron')
 const { mainMenu, /*popupMenu*/} = require('./menu.js')
 require('@electron/remote/main').initialize()
+const { net } = require('electron')
 
 //Constant to create the window.
 const createWindow = () => {
@@ -25,7 +26,6 @@ const createWindow = () => {
 
   ipcMain.on("channelPost",(e,args) =>{
     console.log(args)
-    const { net } = require('electron')
     const request = net.request({
       method: 'POST',
       url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/login',
@@ -47,10 +47,9 @@ const createWindow = () => {
           console.log(json.data.token)
           e.sender.send("channelPost-r", json.data.usuari.nom)
       }
-        else{
+        else if (response.statusCode == 400){
           var error = true;
-          e.sender.send("channelPost-r", error)
-          
+          e.sender.send("channelPost-r", error)      
         }
       })
       response.on('end', () => {
@@ -61,32 +60,56 @@ const createWindow = () => {
   })
 
   //Initialize the application with the given window.
+  const data = []
   app.whenReady().then(() => {
     ipcMain.on("channelInfo",(e,args) =>{
         console.log(args)
-        const { net } = require('electron')
+
         const request = net.request({
           method: 'GET',
           url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/2'
         })
-        console.log()
-        
-        //const data = []
+
         request.on('response', (response) => {
           response.on('data', (chunk) => {
             //data.push(chunk)
             var json = JSON.parse(chunk);
-      
-            e.sender.send("channelInfo-r",json)
-            console.log(`BODY: ${json.data}`)
+            data.push(json.data)
+            e.sender.send("channeldata", data)
+            e.sender.send("channelInfo-r1",json)
           })
           response.on('end', () => {
             console.log('No more data in response.')
-            //const json = Buffer.concat(data).toString()
-            //console.log(json)
           })
         })
+
         request.end()
+
+        console.log(data)
+        for(var i = 1;i < 10; i++){
+          var url = 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/' + i
+          console.log(url)
+          const request2 = net.request({
+            method: 'GET',
+            url: url
+          })
+             request2.on('response', (response) => {
+              response.on('data', (chunk) => {
+                var json = JSON.parse(chunk);
+                if(json.data.fotos[0] == null){
+                  console.log('Url is empty')
+                }else{
+                  console.log(`BODY: ${json.data.fotos[0].url}`)
+                }
+
+              })
+              response.on('end', () => {
+                console.log('No more data in response2.')
+              })
+            })
+            request2.end()
+        }
+        
       })
     createWindow() 
   })
