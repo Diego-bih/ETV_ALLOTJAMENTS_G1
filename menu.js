@@ -46,7 +46,9 @@ const template = [
          module.exports = {
           win2
          }
-        }
+        },
+        id:'login',
+        role: "login"
   }
   
 ]

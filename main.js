@@ -4,6 +4,7 @@ require('@electron/remote/main').initialize()
 const { net } = require('electron')
 
 //Constant to create the window.
+
 const createWindow = () => {
     const win = new BrowserWindow({
     webPreferences:{
@@ -15,13 +16,13 @@ const createWindow = () => {
     minHeight: 620
     
     })
-    Menu.setApplicationMenu(mainMenu);
     win.maximize()
     win.loadFile('./html/home.html')
+    Menu.setApplicationMenu(mainMenu);
     module.exports = {
         win
     }
-    win.webContents.openDevTools()
+    //console.log(Menu.getApplicationMenu().getMenuItemById('login'))
   }
 
   ipcMain.on("channelInfo",(e,args) =>{
@@ -44,6 +45,11 @@ const createWindow = () => {
 
     request.end()
   })
+  
+  ipcMain.on("channellogin" , (e,args) => {
+    e.sender.send("channellogin-home", args)
+  })
+  
 
   ipcMain.on("channelPost",(e,args) =>{
     console.log(args)
@@ -54,7 +60,6 @@ const createWindow = () => {
         'Content-Type': 'application/json'
       }
     })
-    
     //request.write(args)
 
     request.on('response', (response) => {
@@ -66,7 +71,22 @@ const createWindow = () => {
         var json = JSON.parse(chunk);
         if(response.statusCode == 200){
           console.log(json.data.token)
-          e.sender.send("channelPost-r", json.data.usuari.nom)
+          const menu = Menu.getApplicationMenu(); // get default menu
+          var logout = 
+            {
+              label: 'Logout',
+              accelerator: "Control+e",
+              role: 'logout'
+            }
+          
+          const items = menu?.items.filter((item) => item.role !== 'login')
+          
+          items.push(logout)
+          Menu.setApplicationMenu(Menu.buildFromTemplate(items))
+
+          e.sender.send("channelPost-r", json.data.token)
+          console.log(Menu.getApplicationMenu().getMenuItemById('login'))
+
       }
         else if (response.statusCode == 400){
           var error = true;

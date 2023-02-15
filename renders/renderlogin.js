@@ -23,5 +23,10 @@ ipcRenderer.on("channelPost-r",(e,args) => {
     if(args == t){
         console.log("Ha ocurrit un problema")
     }else if(args != t){
-    console.log("Hello: " + args )}
+    const token = args
+    console.log("Hello: " + token)
+    e.sender.send("channellogin", token)
+
+        window.close()
+}
 })
