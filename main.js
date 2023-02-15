@@ -24,6 +24,27 @@ const createWindow = () => {
     win.webContents.openDevTools()
   }
 
+  ipcMain.on("channelInfo",(e,args) =>{
+    console.log(args)
+    const request = net.request({
+      method: 'GET',
+      url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/fotos'
+    })
+    request.on('response', (response) => {
+      response.on('data', (chunk) => {
+        //data.push(chunk)
+          var json = JSON.parse(chunk);
+          e.sender.send("channelInfo-r1",json.data)
+        
+      })
+      response.on('end', () => {
+        console.log('No more data in response.')
+      })
+    })
+
+    request.end()
+  })
+
   ipcMain.on("channelPost",(e,args) =>{
     console.log(args)
     const request = net.request({
@@ -62,28 +83,7 @@ const createWindow = () => {
   //Initialize the application with the given window.
   var data = []
   app.whenReady().then(() => {
-    ipcMain.on("channelInfo",(e,args) =>{
-        console.log(args)
-
-        const request = net.request({
-          method: 'GET',
-          url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/fotos'
-        })
-
-        request.on('response', (response) => {
-          response.on('data', (chunk) => {
-            //data.push(chunk)
-            var json = JSON.parse(chunk);
-            e.sender.send("channelInfo-r1",json.data)
-          })
-          response.on('end', () => {
-            console.log('No more data in response.')
-          })
-        })
-
-        request.end()
-      })
-    createWindow() 
+      createWindow() 
   })
 
   app.on('browser-window-created', (_, window) => {

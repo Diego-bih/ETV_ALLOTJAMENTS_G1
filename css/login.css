@@ -1,19 +1,27 @@
 /*Border box: This makes sure that the padding and border are included in the total width and height of the elements.*/
-
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700');
 * {
     box-sizing: border-box;
   }
   
   body {
-    background: #DADADE
+    background: #ecf9ff;
+    color: #272727;
+    font-family: 'Quicksand', serif;
+    font-style: normal;
+    font-weight: 400;
+    letter-spacing: 0;
+    padding: 1rem;
   }
-  .create_title {
-      text-align: center;
-      padding-bottom: 0.5rem;
-    }
-  
+
+  h1 {
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+}
   /*Column for the label. To make responsive functionality*/
   .col-25 {
+      color: #ffffff;
       float: left;
       width: 25%;
       margin-top: 6px;
@@ -28,27 +36,29 @@
       text-align: center;
     }
   
-    input[type=submit] {
-      display: block;
-      margin: 0 auto;
-      background-color: black;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      float: right;
-      overflow:auto;
-    }
-    
-    /*Hover for the submit button*/
-    input[type=submit]:hover {
-      background-color: grey;
-    }
+   input[type=submit] {
+    display: block;
+    margin: auto;
+    background-color: black;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    overflow:auto;
+  }
   
+  /*Hover for the submit button*/
+  input[type=submit]:hover {
+    background-color: grey;
+  }
+  .row{
+    text-align: center;
+    padding-top: 0.4rem;
+  }
   .container {
       border-radius: 5px;
-      background-color: #f2f2f2;
+      background: linear-gradient(to bottom left, #EF8D9C 40%, #FFC39E 100%);
       padding: 20px;
     }
   
