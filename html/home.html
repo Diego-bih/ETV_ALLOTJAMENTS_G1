@@ -2,10 +2,20 @@
 <html lang="en">
     <head>
         <title>Home</title>
-        <script>window.$ = window.jQuery = require('jquery')</script>
         <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+     crossorigin=""/>
+
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin="">
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://unpkg.com/gridjs/dist/theme/mermaid.min.css" rel="stylesheet" />
         <link rel='stylesheet' type='text/css' media='screen' href='../css/home.css'>
-        <script>window.$ = window.jQuery = require('jquery')</script>
     </head>
     <body>
         <div class = "main">
@@ -13,9 +23,11 @@
             <div class ="cards">
 
             </div>
+            <div id="map"></div>
         </div>
     </body>
     <script>
         require('../renders/renderhome.js')
+        const {verAlojamiento} = require('../renders/renderhotel');
     </script>
 </html>

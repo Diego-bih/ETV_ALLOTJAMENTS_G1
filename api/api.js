@@ -1,3 +1,8 @@
+const verAlojamiento = require('../renders/renderhotel');
+
+
+let $ = {jQuery} = require('jquery');
+
 function getInfo(info){
   /*
     document.getElementById("nom").innerText = info.data.nom
@@ -17,10 +22,12 @@ function getInfo(info){
         let text2 = $(`<p class="card_text">Per ${obj.allotjament.npersones} persones</p>`)
         let text3 = $(`<p class="card_text">${obj.allotjament.descripcio}</p>`)
         let text4 = $(`<p class="card_text">Valoració: ${obj.allotjament.valoracio} estrelles</p>`)
-        let button = $(`<button class="btn card_btn">Llegir Més</button>`)
+        let button = $(`<button class="btn card_btn" onclick="verAlojamiento(${obj.allotjament_id})" >Llegir Més</button>`)
+          
         container.append(li.append(card.append(image,cardcontent.append(cardtitle,text,text2,text3,text4,button))))
       }
   }
+
 
 module.exports = {
   getInfo

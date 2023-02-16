@@ -3,6 +3,7 @@ const { mainMenu, /*popupMenu*/} = require('./menu.js')
 require('@electron/remote/main').initialize()
 const { net } = require('electron')
 
+let mainWindow;
 //Constant to create the window.
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -15,6 +16,7 @@ const createWindow = () => {
     minHeight: 620
     
     })
+    mainWindow = win;
     Menu.setApplicationMenu(mainMenu);
     win.maximize()
     win.loadFile('./html/home.html')
@@ -78,6 +80,56 @@ const createWindow = () => {
       })
     })
     request.end(args)
+  })
+
+var requestWin
+let wcNew
+//new window for hotel
+function createRequestWin(){
+  let creaRequestWin = new BrowserWindow({
+  width: 1200, height: 800,
+   minWidth: 300, minHeight: 150,
+   parent: mainWindow, 
+   modal: true,
+   webPreferences: {
+     contextIsolation: false,
+     nodeIntegration: true,
+   },
+   show: false
+ })
+ creaRequestWin.loadFile("./html/hotel.html")
+ creaRequestWin.once('ready-to-show', () => {
+  creaRequestWin.show() 
+ });
+
+ wcNew = creaRequestWin.webContents
+ requestWin=creaRequestWin
+ wcNew.openDevTools()
+
+}
+
+
+  ipcMain.on("request1",(e,id)=>{
+    createRequestWin()
+    const request = net.request({
+      method: 'GET',
+      url:`http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/${id}`
+    })
+
+    request.on('response', (response) => {
+     console.log(`STATUS: ${response.statusCode}`)
+      
+      response.on("data", (chunk) => {
+        //console.log(`BODY: ${chunk}`)
+        e.sender.send("request-res",`${chunk}`)
+      })
+  
+      response.on('end', () => {
+        console.log('No more data in response2.')
+      })
+    })
+    request.end()
+    console.log("sale")
   })
 
   //Initialize the application with the given window.

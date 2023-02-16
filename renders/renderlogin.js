@@ -1,12 +1,13 @@
 const { ipcRenderer } = require("electron")
 //var api = require('../api/api.js')
+let $ = {jQuery} = require('jquery');
 
-var login = document.getElementById('login')
+var login = $('#login')
 
-login.addEventListener("click", function() {
+login.on("click", function() {
 
-var email = document.getElementById("email").value
-var password = document.getElementById("password").value
+var email = $("#email").val()
+var password = $("#password").val()
 
 var obj = new Object()
 obj.email = email
