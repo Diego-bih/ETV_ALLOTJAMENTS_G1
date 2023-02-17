@@ -8,6 +8,7 @@ ipcRenderer.on("channelInfo-r1",(e,args) => {
     api.getInfo(args);
 })
 
+
 ipcRenderer.on("channellogin-home",(e,args) => {
     console.log(arg)
 })

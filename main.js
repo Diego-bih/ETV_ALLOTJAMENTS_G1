@@ -5,8 +5,9 @@ require('@electron/remote/main').initialize()
 const { net } = require('electron')
 
 //Constant to create the window.
+var win;
 const createWindow = () => {
-    const win = new BrowserWindow({
+    win = new BrowserWindow({
     webPreferences:{
         contextIsolation: false,
         nodeIntegration:true,
@@ -43,7 +44,7 @@ const createWindow = () => {
 
     request.on('response', (response) => {
       response.on('data', (chunk) => {
-        //data.push(chunk)
+         //data.push(chunk)
           var json = JSON.parse(chunk);
           e.sender.send("channelInfo-r1",json.data)
         
@@ -80,6 +81,7 @@ const createWindow = () => {
         //console.log(json.data.token)
         var json = JSON.parse(chunk);
         if(response.statusCode == 200){
+          //Guardar usuario
           console.log(json.data.token)
           const menu = Menu.getApplicationMenu(); // get default menu
           var admin =
@@ -94,7 +96,12 @@ const createWindow = () => {
                 label: 'Edit Accomodation'
               },
               {
-                label: 'List Accomodations'
+                label: 'List Accomodations',
+                click: () => { 
+                 win.loadFile('./html/list.html')
+                },
+                id:'list',
+                role: "list"
               }
             ],
             role: 'admin'   
@@ -149,6 +156,12 @@ const createWindow = () => {
       }
         else if (response.statusCode == 400){
           var error = true;
+          electronDialog.showMessageBox(this.win, {
+            'type': 'error',
+            'title': 'Error',
+            'message': "Error en credenciales",
+            'buttons': []
+        })
           e.sender.send("channelPost-r", error)      
         }
       })
@@ -157,6 +170,28 @@ const createWindow = () => {
       })
     })
     request.end(args)
+  })
+
+  ipcMain.on("channelList", (e,args) =>{
+    console.log(args)
+    const request = net.request({
+      method: 'GET',
+      url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments'
+    })
+
+    request.on('response', (response) => {
+      response.on('data', (chunk) => {
+        //data.push(chunk)
+        var json = JSON.parse(chunk)
+          e.sender.send("channelList-r1",json)
+        
+      })
+      response.on('end', () => {
+        console.log('No more data in response.')
+      })
+    })
+
+    request.end()
   })
 
   //Initialize the application with the given window.

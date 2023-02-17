@@ -51,7 +51,6 @@ const template = [
               autoHideMenuBar:true
            })
          win2.loadFile('./html/login.html')
-         win2.webContents.openDevTools()
          module.exports = {
           win2
          }
@@ -61,6 +60,7 @@ const template = [
   }
   
 ]
+
 
 //Export of the template to implement in the main.
 module.exports.mainMenu = Menu.buildFromTemplate(template) 

@@ -1,3 +1,5 @@
+const { Grid } = require('gridjs')
+
 function getInfo(info){
   /*
     document.getElementById("nom").innerText = info.data.nom
@@ -22,7 +24,28 @@ function getInfo(info){
       }
   }
 
+function getList(info) {
+
+  const grid = new Grid(
+    {
+      columns: ["id", "nom", "descripcio", "nregistre"],
+      search: true,
+      pagination: true,
+      sort: true,
+      width: 1000,
+      data: () => {
+        return new Promise(resolve => {
+          setTimeout(()=> resolve(info.data),1000)
+        })
+      }
+    }
+  ).render(document.getElementById("wrapper"))
+  
+
+}
+
 module.exports = {
-  getInfo
+  getInfo,
+  getList
 }
 
