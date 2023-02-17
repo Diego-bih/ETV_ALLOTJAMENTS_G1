@@ -23,6 +23,15 @@ const template = [
     accelerator: "Control+h"
   },
   {
+    label: 'Dashboard'
+
+  },
+  {
+    label: 'Map'
+
+  },
+
+  {
     label:"Login",
         click: () => { 
           const {win} = require('./main.js')

@@ -1,10 +1,10 @@
 const { app, BrowserWindow,Menu,ipcMain} = require('electron')
+const electronDialog = require('electron').dialog;
 const { mainMenu, /*popupMenu*/} = require('./menu.js')
 require('@electron/remote/main').initialize()
 const { net } = require('electron')
 
 //Constant to create the window.
-
 const createWindow = () => {
     const win = new BrowserWindow({
     webPreferences:{
@@ -24,6 +24,15 @@ const createWindow = () => {
     }
     //console.log(Menu.getApplicationMenu().getMenuItemById('login'))
   }
+  
+  ipcMain.on("channelshowlogged", (e,args) => {
+    electronDialog.showMessageBox(this.win, {
+      'type': 'info',
+      'title': 'Logged In',
+      'message': "Successfully logged!",
+      'buttons': []
+  })
+  })
 
   ipcMain.on("channelInfo",(e,args) =>{
     console.log(args)
@@ -31,6 +40,7 @@ const createWindow = () => {
       method: 'GET',
       url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/fotos'
     })
+
     request.on('response', (response) => {
       response.on('data', (chunk) => {
         //data.push(chunk)
@@ -72,20 +82,69 @@ const createWindow = () => {
         if(response.statusCode == 200){
           console.log(json.data.token)
           const menu = Menu.getApplicationMenu(); // get default menu
+          var admin =
+          {
+                label:'Admin',
+                submenu:
+            [
+              {
+                label: 'New Accomodation'
+              },
+              {
+                label: 'Edit Accomodation'
+              },
+              {
+                label: 'List Accomodations'
+              }
+            ],
+            role: 'admin'   
+          }
+
           var logout = 
             {
               label: 'Logout',
               accelerator: "Control+e",
-              role: 'logout'
+              role: 'logout',
+              click: () => {
+                electronDialog.showMessageBox(this.win, {
+                  'type': 'question',
+                  'title': 'Confirmation',
+                  'message': "Are you sure?",
+                  'buttons': [
+                      'Yes',
+                      'No'
+                  ]
+              })
+                  // Dialog returns a promise so let's handle it correctly
+                  .then((result) => {
+                      // Bail if the user pressed "No" or escaped (ESC) from the dialog box
+                      if (result.response !== 0) { return; }
+          
+                      // Testing.
+                      if (result.response === 0) {
+                        const items = menu?.items.filter((item) => item.role !== 'logout' && item.role !== 'admin')          
+                        Menu.setApplicationMenu(Menu.buildFromTemplate(items))
+                        electronDialog.showMessageBox(this.win, {
+                          'type': 'info',
+                          'title': 'Logged out',
+                          'message': "Logged out",
+                          'buttons': []
+                      })
+                      }
+          
+                  })
+              }
+              
             }
           
           const items = menu?.items.filter((item) => item.role !== 'login')
           
+          items.push(admin)
           items.push(logout)
+
           Menu.setApplicationMenu(Menu.buildFromTemplate(items))
 
           e.sender.send("channelPost-r", json.data.token)
-          console.log(Menu.getApplicationMenu().getMenuItemById('login'))
 
       }
         else if (response.statusCode == 400){

@@ -39,22 +39,23 @@
    input[type=submit] {
     display: block;
     margin: auto;
-    background-color: black;
-    color: white;
-    padding: 12px 20px;
+    background-color: #ecf9ff;
+    color: black;
+    padding: 8px 14px;
     border: none;
     border-radius: 4px;
+    float: right;
     cursor: pointer;
     overflow:auto;
+  }
+  .login{
+    position: relative;
+    top: 8px;
   }
   
   /*Hover for the submit button*/
   input[type=submit]:hover {
     background-color: grey;
-  }
-  .row{
-    text-align: center;
-    padding-top: 0.4rem;
   }
   .container {
       border-radius: 5px;
