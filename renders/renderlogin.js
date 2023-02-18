@@ -1,28 +1,29 @@
 const { ipcRenderer } = require("electron")
 //var api = require('../api/api.js')
-let $ = {jQuery} = require('jquery');
+let $ = { jQuery } = require('jquery');
 
 var login = $('#login')
 
-login.on("click", function() {
+login.on("click", function () {
 
-var email = $("#email").val()
-var password = $("#password").val()
+    var email = $("#email").val()
+    var password = $("#password").val()
 
-var obj = new Object()
-obj.email = email
-obj.password = password
+    var obj = new Object()
+    obj.email = email
+    obj.password = password
 
-var json = JSON.stringify(obj)
+    var json = JSON.stringify(obj)
 
-ipcRenderer.send("channelPost",json)
+    ipcRenderer.send("channelPost", json)
 
 })
 
-ipcRenderer.on("channelPost-r",(e,args) => {
+ipcRenderer.on("channelPost-r", (e, args) => {
     var t = true
-    if(args == t){
+    if (args == t) {
         console.log("Ha ocurrit un problema")
-    }else if(args != t){
-    console.log("Hello: " + args )}
+    } else if (args != t) {
+        console.log("Hello: " + args)
+    }
 })
