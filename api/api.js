@@ -1,4 +1,4 @@
-const { Grid } = require('gridjs')
+const { Grid, h } = require('gridjs')
 
 function getInfo(info){
   /*
@@ -24,18 +24,47 @@ function getInfo(info){
       }
   }
 
-function getList(info) {
-
+function getList(id,info) {
+  console.log(id)
+  console.log(info[0].propietari.id)
   const grid = new Grid(
     {
-      columns: ["id", "nom", "descripcio", "nregistre"],
+      columns: [
+       "id",
+       "nom",
+       "descripcio",
+       "nregistre",
+       {
+        data: (row) => row.propietari.id,
+        name: 'Propietari',
+
+       },
+       { 
+        name: 'Actions',
+        formatter: (cell, row) => {
+          //Obtener id de creador. Hacer if y que solo salgan botones en los que haya creado.
+          if(row.cells[4].data == id){
+            return h('button', {
+              className: 'py-2 mb-4 px-4 border rounded-md text-white bg-blue-600',
+              onClick: () =>{
+                console.log(row.cells[4].data)
+                if(row.cells[4].data == id){
+                  console.log('klk')
+                }
+                }
+            }, 'Edit')
+          {
+         ;}
+        }
+        } },
+      ],
       search: true,
       pagination: true,
       sort: true,
-      width: 1000,
+      //width: 1000,
       data: () => {
         return new Promise(resolve => {
-          setTimeout(()=> resolve(info.data),1000)
+          setTimeout(()=> resolve(info),1000)
         })
       }
     }

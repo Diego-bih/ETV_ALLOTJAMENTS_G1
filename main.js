@@ -2,7 +2,8 @@ const { app, BrowserWindow,Menu,ipcMain} = require('electron')
 const electronDialog = require('electron').dialog;
 const { mainMenu, /*popupMenu*/} = require('./menu.js')
 require('@electron/remote/main').initialize()
-const { net } = require('electron')
+const { net } = require('electron');
+const { isEmptyObject } = require('jquery');
 
 //Constant to create the window.
 var win;
@@ -20,6 +21,7 @@ const createWindow = () => {
     win.maximize()
     win.loadFile('./html/home.html')
     Menu.setApplicationMenu(mainMenu);
+    win.webContents.openDevTools()
     module.exports = {
         win
     }
@@ -35,7 +37,7 @@ const createWindow = () => {
   })
   })
 
-  ipcMain.on("channelInfo",(e,args) =>{
+  await ipcMain.on("channelInfo",(e,args) =>{
     console.log(args)
     const request = net.request({
       method: 'GET',
@@ -46,8 +48,7 @@ const createWindow = () => {
       response.on('data', (chunk) => {
          //data.push(chunk)
           var json = JSON.parse(chunk);
-          e.sender.send("channelInfo-r1",json.data)
-        
+          e.sender.send("channelInfo-r1",json.data) 
       })
       response.on('end', () => {
         console.log('No more data in response.')
@@ -61,7 +62,8 @@ const createWindow = () => {
     e.sender.send("channellogin-home", args)
   })
   
-
+  var token;
+  var id;
   ipcMain.on("channelPost",(e,args) =>{
     console.log(args)
     const request = net.request({
@@ -72,7 +74,6 @@ const createWindow = () => {
       }
     })
     //request.write(args)
-
     request.on('response', (response) => {
       console.log(`STATUS: ${response.statusCode}`)
       console.log(`HEADERS: ${JSON.stringify(response.headers)}`)
@@ -80,10 +81,20 @@ const createWindow = () => {
         console.log(`BODY: ${chunk}`)
         //console.log(json.data.token)
         var json = JSON.parse(chunk);
+        token = json.data.token;
+        id = json.data.usuari.id;
         if(response.statusCode == 200){
           //Guardar usuario
           console.log(json.data.token)
           const menu = Menu.getApplicationMenu(); // get default menu
+          var dashboard = {
+            label: 'Dashboard',
+            role: 'dashboard'
+          }
+          var map = {
+            label: 'Map',
+            role: 'map'
+          }
           var admin =
           {
                 label:'Admin',
@@ -129,7 +140,7 @@ const createWindow = () => {
           
                       // Testing.
                       if (result.response === 0) {
-                        const items = menu?.items.filter((item) => item.role !== 'logout' && item.role !== 'admin')          
+                        const items = menu?.items.filter((item) => item.role !== 'logout' && item.role !== 'map' && item.role !== 'dashboard' && item.role !== 'admin')          
                         Menu.setApplicationMenu(Menu.buildFromTemplate(items))
                         electronDialog.showMessageBox(this.win, {
                           'type': 'info',
@@ -146,6 +157,8 @@ const createWindow = () => {
           
           const items = menu?.items.filter((item) => item.role !== 'login')
           
+          items.push(map)
+          items.push(dashboard)
           items.push(admin)
           items.push(logout)
 
@@ -174,16 +187,18 @@ const createWindow = () => {
 
   ipcMain.on("channelList", (e,args) =>{
     console.log(args)
+    console.log(token)
+    console.log(id)
     const request = net.request({
       method: 'GET',
       url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments'
     })
 
     request.on('response', (response) => {
-      response.on('data', (chunk) => {
+     response.on('data', (chunk) => {
         //data.push(chunk)
         var json = JSON.parse(chunk)
-          e.sender.send("channelList-r1",json)
+          e.sender.send("channelList-r1",[id,json.data])
         
       })
       response.on('end', () => {

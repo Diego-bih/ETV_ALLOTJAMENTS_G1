@@ -1,0 +1,1 @@
+//Nregistro tiene que ser unico npropietari es la id del usuario
