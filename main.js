@@ -37,7 +37,7 @@ const createWindow = () => {
   })
   })
 
-  await ipcMain.on("channelInfo",(e,args) =>{
+   ipcMain.on("channelInfo",(e,args) =>{
     console.log(args)
     const request = net.request({
       method: 'GET',
@@ -81,9 +81,9 @@ const createWindow = () => {
         console.log(`BODY: ${chunk}`)
         //console.log(json.data.token)
         var json = JSON.parse(chunk);
-        token = json.data.token;
-        id = json.data.usuari.id;
         if(response.statusCode == 200){
+          token = json.data.token;
+          id = json.data.usuari.id;
           //Guardar usuario
           console.log(json.data.token)
           const menu = Menu.getApplicationMenu(); // get default menu
