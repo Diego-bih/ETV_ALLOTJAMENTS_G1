@@ -3,7 +3,6 @@ const electronDialog = require('electron').dialog;
 const { mainMenu, /*popupMenu*/} = require('./menu.js')
 require('@electron/remote/main').initialize()
 const { net } = require('electron');
-const { isEmptyObject } = require('jquery');
 
 //Constant to create the window.
 var win;
@@ -53,7 +52,7 @@ const createWindow = () => {
   })
   })
 
-   ipcMain.on("channelInfo",(e,args) =>{
+  ipcMain.on("channelInfo",(e,args) =>{
     console.log(args)
     const request = net.request({
       method: 'GET',
@@ -63,6 +62,7 @@ const createWindow = () => {
     request.on('response', (response) => {
       response.on('data', (chunk) => {
          //data.push(chunk)
+          //console.log(chunk)
           var json = JSON.parse(chunk);
           e.sender.send("channelInfo-r1",json.data) 
       })
@@ -250,12 +250,14 @@ const createWindow = () => {
 
   ipcMain.on("channelEdit",(e,args) =>{
     console.log(args)
+    console.log(token)
     const request = net.request({
       method: 'PUT',
       url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/' + args[0],
       headers: {
-        'Authorization': `bearerAuth(${token})`,
+        'Authorization': `bearer ${token}`,
         'Content-Type': 'application/json',
+        'accept': 'application/json'
       }
     })
 
@@ -270,9 +272,8 @@ const createWindow = () => {
               'message': "Allotjament Editat",
               'buttons': []
           })
-          document.location = document.location
-            //e.sender.send("channelCreate-r",json.data) 
-          }else if(response.statusCode == 400){
+            e.sender.send("channeledit-r",true) 
+          }else{
             console.log(json.data)
             electronDialog.showMessageBox(this.win, {
               'type': 'error',
@@ -280,6 +281,7 @@ const createWindow = () => {
               'message': "Error en editar",
               'buttons': []
           })
+
           }
           
       })
@@ -300,7 +302,7 @@ const createWindow = () => {
       method: 'POST',
       url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments',
       headers: {
-        'Authorization': `bearerAuth(${token})`,
+        'Authorization': `bearer ${token}`,
         'Content-Type': 'application/json',
       }
     })
@@ -317,7 +319,7 @@ const createWindow = () => {
               'buttons': []
           })
             e.sender.send("channelCreate-r",json.data) 
-          }else if(response.statusCode == 400){
+          }else{
             console.log(json.data)
             electronDialog.showMessageBox(this.win, {
               'type': 'error',

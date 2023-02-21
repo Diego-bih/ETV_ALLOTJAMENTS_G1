@@ -62,7 +62,7 @@ function getList(id,info) {
                     }    
                     var descripcio = childwindow.document.getElementById("descripcio").value = data.descripcio
                     childwindow.document.getElementById('descripcio').oninput = function() {
-                      nom = childwindow.document.getElementById('nom').value
+                      descripcio = childwindow.document.getElementById('descripcio').value
                     }
                     var nregistre = childwindow.document.getElementById("nregistre").value = data.nregistre
                     childwindow.document.getElementById('nregistre').oninput = function() {
@@ -115,7 +115,7 @@ function getList(id,info) {
                     childwindow.document.getElementById('propietari_id').readOnly = true 
                     var categoria_id = childwindow.document.getElementById("categoria_id").value = data.categoria_id
                     childwindow.document.getElementById('categoria_id').oninput = function() {
-                      nom = childwindow.document.getElementById('categoria_id').value
+                      categoria_id = childwindow.document.getElementById('categoria_id').value
                     }
                     var longitud = childwindow.document.getElementById("longitud").value = data.longitud
                     childwindow.document.getElementById('longitud').oninput = function() {
@@ -128,7 +128,7 @@ function getList(id,info) {
                     var edit = childwindow.document.getElementById('create')
                   
                     edit.addEventListener("click", function() {
-                    
+
                         var obj = new Object()
                         obj.nom = nom
                         obj.descripcio = descripcio
@@ -149,9 +149,12 @@ function getList(id,info) {
                         obj.latitud = latitud 
                         
                         var json = JSON.stringify(obj)
-                        console.log(json)
+                        //console.log(json)
                         ipcRenderer.send("channelEdit",[data.id,json])
                     
+                    })
+                    ipcRenderer.on("channelEdit-r",(e,args) => {
+                      childwindow.close()
                     })
                     }
                   }
