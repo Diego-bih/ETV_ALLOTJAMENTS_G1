@@ -20,7 +20,7 @@ ipcRenderer.send("channelPost",json)
 
 })
 
-var submit = document.getElementById("login")
+//var submit = document.getElementById("login")
 ipcRenderer.on("channelPost-r",(e,args) => {
     var t = true
     if(args == t){

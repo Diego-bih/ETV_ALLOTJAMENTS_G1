@@ -25,6 +25,22 @@ const createWindow = () => {
     module.exports = {
         win
     }
+    win.webContents.setWindowOpenHandler(() => {
+      //if (url === '../html/create-car-group.html') {
+        return {
+          action: 'allow',
+          overrideBrowserWindowOptions: {
+            fullscreenable: false,
+            contextIsolation: false,
+            nodeIntegration:true,
+            modal:true,
+            parent:win,
+            autoHideMenuBar:true,
+          }
+        }
+      //}
+      //return { action: 'deny' }
+    })
     //console.log(Menu.getApplicationMenu().getMenuItemById('login'))
   }
   
@@ -64,6 +80,7 @@ const createWindow = () => {
   
   var token;
   var id;
+  var win2
   ipcMain.on("channelPost",(e,args) =>{
     console.log(args)
     const request = net.request({
@@ -82,8 +99,8 @@ const createWindow = () => {
         //console.log(json.data.token)
         var json = JSON.parse(chunk);
         if(response.statusCode == 200){
-          token = json.data.token;
-          id = json.data.usuari.id;
+        token = json.data.token;
+        id = json.data.usuari.id;
           //Guardar usuario
           console.log(json.data.token)
           const menu = Menu.getApplicationMenu(); // get default menu
@@ -101,7 +118,28 @@ const createWindow = () => {
                 submenu:
             [
               {
-                label: 'New Accomodation'
+                label: 'New Accomodation',
+                click: () => { 
+                  win2 = new BrowserWindow({
+                    webPreferences:{
+                        contextIsolation: false,
+                        nodeIntegration:true
+                    },
+                      width: 700,
+                      height: 700,
+                      maxWidth:700,
+                      maxHeight:700,
+                      minWidth:320,
+                      center:true,
+                      parent:win,
+                      modal:true,
+                      autoHideMenuBar:true
+                   })
+                  win2.loadFile('./html/create.html')
+                  win2.webContents.openDevTools()
+                 },
+                 id:'list',
+                 role: "list"
               },
               {
                 label: 'Edit Accomodation'
@@ -142,6 +180,7 @@ const createWindow = () => {
                       if (result.response === 0) {
                         const items = menu?.items.filter((item) => item.role !== 'logout' && item.role !== 'map' && item.role !== 'dashboard' && item.role !== 'admin')          
                         Menu.setApplicationMenu(Menu.buildFromTemplate(items))
+                        win.loadFile('./html/home.html')
                         electronDialog.showMessageBox(this.win, {
                           'type': 'info',
                           'title': 'Logged out',
@@ -207,6 +246,94 @@ const createWindow = () => {
     })
 
     request.end()
+  })
+
+  ipcMain.on("channelEdit",(e,args) =>{
+    console.log(args)
+    const request = net.request({
+      method: 'PUT',
+      url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/' + args[0],
+      headers: {
+        'Authorization': `bearerAuth(${token})`,
+        'Content-Type': 'application/json',
+      }
+    })
+
+    request.on('response', (response) => {
+      response.on('data', (chunk) => {
+         //data.push(chunk)
+          var json = JSON.parse(chunk);
+          if(response.statusCode == 200){
+            electronDialog.showMessageBox(this.win, {
+              'type': 'info',
+              'title': 'Info',
+              'message': "Allotjament Editat",
+              'buttons': []
+          })
+          document.location = document.location
+            //e.sender.send("channelCreate-r",json.data) 
+          }else if(response.statusCode == 400){
+            console.log(json.data)
+            electronDialog.showMessageBox(this.win, {
+              'type': 'error',
+              'title': 'Error',
+              'message': "Error en editar",
+              'buttons': []
+          })
+          }
+          
+      })
+      response.on('end', () => {
+        console.log('No more data in response.')
+      })
+    })
+    console.log(args[1])
+    request.end(args[1])
+  })
+  ipcMain.on("channelIdCreate" , (e,args) => {
+    e.sender.send("channelIdCreate-r", id)
+  })
+
+  ipcMain.on("channelCreate",(e,args) =>{
+    console.log(args)
+    const request = net.request({
+      method: 'POST',
+      url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments',
+      headers: {
+        'Authorization': `bearerAuth(${token})`,
+        'Content-Type': 'application/json',
+      }
+    })
+
+    request.on('response', (response) => {
+      response.on('data', (chunk) => {
+         //data.push(chunk)
+          var json = JSON.parse(chunk);
+          if(response.statusCode == 200){
+            electronDialog.showMessageBox(this.win, {
+              'type': 'info',
+              'title': 'Info',
+              'message': "Allotjament creat",
+              'buttons': []
+          })
+            e.sender.send("channelCreate-r",json.data) 
+          }else if(response.statusCode == 400){
+            console.log(json.data)
+            electronDialog.showMessageBox(this.win, {
+              'type': 'error',
+              'title': 'Error',
+              'message': "Error en crear",
+              'buttons': []
+          })
+          }
+          
+      })
+      response.on('end', () => {
+        console.log('No more data in response.')
+      })
+    })
+
+    request.end(args)
   })
 
   //Initialize the application with the given window.

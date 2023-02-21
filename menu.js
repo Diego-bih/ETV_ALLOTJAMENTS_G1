@@ -32,7 +32,7 @@ const template = [
                 nodeIntegration:true
             },
               width: 700,
-              height: 530,
+              height: 450,
               maxWidth:700,
               maxHeight:530,
               minWidth:320,

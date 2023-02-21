@@ -3,9 +3,140 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Accomodation</title>
+    <link rel='stylesheet' type='text/css' media='screen' href='../css/create.css'>
+    <script>window.$ = window.jQuery = require('jquery')</script>
+    <title id="title">Create Accomodation</title>
 </head>
 <body>
-    <h1>Create Accomodation</h1>
+    <h1 id = "h1">Crear Allotjament</h1>
+    <div class="container">
+        <form>
+            <div class="row">
+              <div class="col-25">
+                <label for="nom">Nom</label>
+              </div>
+              <div class="col-75">
+            <input id = "nom" type="text" name="nom" placeholder="Nom de l'allotjament" required>
+              </div>
+              <div class="row">
+                <div class="col-25">
+                  <label for="descripcio">Descripcio</label>
+                </div>
+                <div class="col-75">
+              <input id = "descripcio" type="text" name="descripcio" placeholder="Descripcio del allotjament" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="nregistre">Nº Registre</label>
+                </div>
+                <div class="col-75">
+              <input id = "nregistre" type="text" name="nregistre" placeholder="Nombre de registre" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="npersones">Nº Persones</label>
+                </div>
+                <div class="col-75">
+              <input id = "npersones" type="text" name="npersones" placeholder="Nombre de persones" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="nbanys">Nº Banys</label>
+                </div>
+                <div class="col-75">
+              <input id = "nbanys" type="text" name="nbanys" placeholder="Nombre de banys" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="nllits">Nº Llits</label>
+                </div>
+                <div class="col-75">
+              <input id = "nllits" type="text" name="nllits" placeholder="Nombre de llits" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="nhabitacions">Nº Habitacions</label>
+                </div>
+                <div class="col-75">
+              <input id = "nhabitacions" type="text" name="nhabitacions" placeholder="Nombre d'Habitacions" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="carrer">Carrer</label>
+                </div>
+                <div class="col-75">
+              <input id = "carrer" type="text" name="carrer" placeholder="Carrer" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="numero">Numero</label>
+                </div>
+                <div class="col-75">
+              <input id = "numero" type="text" name="numero" placeholder="Nombre del carrer " required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="pisporta">Pisporta</label>
+                </div>
+                <div class="col-75">
+              <input id = "pisporta" type="text" name="pisporta" placeholder="Pisporta" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="municipi_id">Municipi ID</label>
+                </div>
+                <div class="col-75">
+              <input id = "municipi_id" type="text" name="municipi_id" placeholder="Municipi" required>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                  <label for="tipus_allotjament_id">Tipus ID</label>
+                </div>
+                <div class="col-75">
+              <input id = "tipus_allotjament_id" type="text" name="tipus_allotjament_id" placeholder="ID del tipus de l'allotjament" required>
+            </div>  
+            <div class="row">
+                <div class="col-25">
+                  <label for="tipus_vacances_id">Tipus Vacances ID</label>
+                </div>
+                <div class="col-75">
+              <input id = "tipus_vacances_id" type="text" name="tipus_vacances_id" placeholder="ID del tipus de vacances" required>
+            </div>  
+            <div class="row">
+                <div class="col-25">
+                  <label for="propietari_id">Propietari ID</label>
+                </div>
+                <div class="col-75">
+              <input id = "propietari_id" type="text" name="propietari_id" placeholder="Id del propietari" required>
+            </div>  
+            <div class="row">
+                <div class="col-25">
+                  <label for="categoria_id">Categoria ID</label>
+                </div>
+                <div class="col-75">
+              <input id = "categoria_id" type="text" name="categoria_id" placeholder="ID de la Categoria" required>
+            </div>  
+            <div class="row">
+                <div class="col-25">
+                  <label for="longitud">longitud</label>
+                </div>
+                <div class="col-75">
+              <input id = "longitud" type="text" name="longitud" placeholder="Longitud de l'allotjament" required>
+            </div>  
+            <div class="row">
+                <div class="col-25">
+                  <label for="latitud">Latitud</label>
+                </div>
+                <div class="col-75">
+              <input id = "latitud" type="text" name="latitud" placeholder="Latitud de l'allotjament" required>
+            </div>      
+            <div class = "row">
+              <input id ="create" class="login" type="submit" value="Submit">
+            </div>            
+        </form>
+        </div>
 </body>
+<script>
+  require('../renders/rendercreate.js')
+</script>
 </html>
