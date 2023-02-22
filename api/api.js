@@ -177,6 +177,11 @@ function getList(id,info) {
         } },
       ],
       search: true,
+      language: {
+        'search': {
+          'placeholder': `La teva ID de propietari es: ${id}`
+        }
+      },
       pagination: true,
       sort: true,
       //width: 1000,
