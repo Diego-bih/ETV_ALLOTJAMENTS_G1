@@ -160,6 +160,7 @@ function getList(id,info) {
                     })
                     ipcRenderer.on("channelEdit-r",(e,args) => {
                       childwindow.close()
+                      document.location = document.location
                     })
                     }
                   }

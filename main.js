@@ -142,9 +142,6 @@ const createWindow = () => {
                  role: "list"
               },
               {
-                label: 'Edit Accomodation'
-              },
-              {
                 label: 'List Accomodations',
                 click: () => { 
                  win.loadFile('./html/list.html')
@@ -272,7 +269,7 @@ const createWindow = () => {
               'message': "Allotjament Editat",
               'buttons': []
           })
-            e.sender.send("channeledit-r",true) 
+            e.sender.send("channelEdit-r",true) 
           }else{
             console.log(json.data)
             electronDialog.showMessageBox(this.win, {
