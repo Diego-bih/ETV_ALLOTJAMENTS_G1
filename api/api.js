@@ -2,12 +2,17 @@ const { ipcRenderer } = require('electron');
 const { Grid, h,html } = require('gridjs')
 
 function getInfo(info){
-  /*
-    document.getElementById("nom").innerText = info.data.nom
-    document.getElementById("municipi").innerText = info.data.municipi.municipi
-    document.getElementById("image").setAttribute('src', info.data.fotos[0].url)*/
-      console.log(info)
-      //info.forEach(info => {
+        var uniphoto = {}
+        info = info.filter(function(cb) {
+          if(cb.allotjament_id in uniphoto){
+            return false
+          }
+          else{
+            uniphoto[cb.allotjament_id] = true;
+            return true
+          }
+        })
+        console.log(info)
         let container = $('.cards')
         for(var i = 0; i< info.length;i++){
         let obj = info[i];
