@@ -184,7 +184,7 @@ function getList(id,info) {
       },
       pagination: true,
       sort: true,
-      //width: 1000,
+      height: 548,
       data: () => {
         return new Promise(resolve => {
           setTimeout(()=>resolve(info),1000)
