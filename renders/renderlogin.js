@@ -16,7 +16,6 @@ login.on("click", function () {
     var json = JSON.stringify(obj)
 
     ipcRenderer.send("channelPost", json)
-
 })
 
 ipcRenderer.on("channelPost-r", (e, args) => {

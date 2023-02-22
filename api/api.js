@@ -6,7 +6,7 @@ function getInfo(info){
     document.getElementById("nom").innerText = info.data.nom
     document.getElementById("municipi").innerText = info.data.municipi.municipi
     document.getElementById("image").setAttribute('src', info.data.fotos[0].url)*/
-      console.log(info)
+      //console.log(info)
       //info.forEach(info => {
         let container = $('.cards')
         for(var i = 0; i< info.length;i++){

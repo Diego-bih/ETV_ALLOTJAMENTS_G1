@@ -23,6 +23,10 @@ const template = [
     accelerator: "Control+h"
   },
   {
+    id: 'mapa',label: 'Map',
+    click:  () =>  {}
+  },
+  {
     label:"Login",
         click: () => { 
           const {win} = require('./main.js')
@@ -49,7 +53,8 @@ const template = [
         }
   }
   
-]
+];
 
 //Export of the template to implement in the main.
-module.exports.mainMenu = Menu.buildFromTemplate(template) 
+//module.exports.mainMenu = Menu.buildFromTemplate(template) 
+module.exports.template = template;

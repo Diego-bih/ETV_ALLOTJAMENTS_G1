@@ -1,5 +1,5 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
-const { mainMenu, /*popupMenu*/ } = require('./menu.js')
+const { template, /*popupMenu*/ } = require('./menu.js')
 require('@electron/remote/main').initialize()
 const { net } = require('electron')
 
@@ -18,7 +18,7 @@ function createWindow() {
 
   })
 
-  Menu.setApplicationMenu(mainMenu);
+  
   win.maximize()
   win.loadFile('./html/home.html')
   module.exports = {
@@ -26,6 +26,8 @@ function createWindow() {
   }
   win.webContents.openDevTools()
 }
+const menu = Menu.buildFromTemplate(template)
+
 
 ipcMain.on("channelInfo", (e, args) => {
   console.log(args)
@@ -38,7 +40,7 @@ ipcMain.on("channelInfo", (e, args) => {
       //data.push(chunk)
       var json = JSON.parse(chunk);
       e.sender.send("channelInfo-r1", json.data)
-
+      console.log("Datos enviados por channelInfo-r1")
     })
     response.on('end', () => {
       console.log('No more data in response.')
@@ -47,6 +49,67 @@ ipcMain.on("channelInfo", (e, args) => {
 
   request.end()
 })
+
+itemList = menu.getMenuItemById('mapa')
+itemList.click = () => {
+   createMap()
+}
+
+let mapWin
+let wcMap
+//new window for room
+async function createMap() {
+  mapWin = new BrowserWindow({
+    webPreferences:{
+        contextIsolation: false,
+        nodeIntegration:true
+    },
+      width: 1200, height: 800,
+      minWidth: 600, minHeight: 400,
+      center:true,
+      parent:win,
+      modal:true,
+      show: false,
+      autoHideMenuBar:true
+   })
+  await mapWin.loadFile('./html/map.html')
+  
+  mapWin.once("ready-to-show",()=>{
+    mapWin.show()
+  })
+  
+  wcMap = mapWin.webContents
+  console.log(wcMap.session.getStoragePath())
+  wcMap.openDevTools()
+
+}
+
+module.exports.mapWin = mapWin;
+
+
+
+ipcMain.on("mapTots",(args) => {
+
+  const request = net.request({
+    method: 'GET',
+    url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/fotos'
+  })
+  request.on('response', (response) => {
+    response.on('data', (chunk) => {
+      //data.push(chunk)
+      var json = JSON.parse(chunk);
+      console.log(json.data[0])
+      mapWin.send("mapRes", json.data)
+      console.log("Datos enviados por mapRes")
+    })
+    response.on('end', () => {
+      console.log('No more data in response.')
+    })
+  })
+
+  request.end()
+})
+
 
 ipcMain.on("channelPost", (e, args) => {
   console.log(args)
@@ -140,6 +203,7 @@ ipcMain.on("request1", async (e,id) => {
 var data = []
 app.whenReady().then(() => {
   createWindow()
+  Menu.setApplicationMenu(menu)
 })
 
 app.on('browser-window-created', (_, window) => {
