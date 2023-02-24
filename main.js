@@ -4,6 +4,9 @@ const { mainMenu, /*popupMenu*/} = require('./menu.js')
 require('@electron/remote/main').initialize()
 const { net } = require('electron');
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 //Constant to create the window.
 var win;
 const createWindow = () => {
@@ -54,6 +57,7 @@ const createWindow = () => {
 
   ipcMain.on("channelInfo",(e,args) =>{
     console.log(args)
+    var res = ''
     const request = net.request({
       method: 'GET',
       url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/fotos'
@@ -63,10 +67,11 @@ const createWindow = () => {
       response.on('data', (chunk) => {
          //data.push(chunk)
           //console.log(chunk)
-          var json = JSON.parse(chunk);
-          e.sender.send("channelInfo-r1",json.data) 
+          res += chunk
       })
       response.on('end', () => {
+        var json = JSON.parse(res);
+        e.sender.send("channelInfo-r1",json.data) 
         console.log('No more data in response.')
       })
     })
@@ -83,7 +88,7 @@ const createWindow = () => {
   var win2
   ipcMain.on("channelPost",(e,args) =>{
     console.log(args)
-    const request = net.request({
+    const request =  net.request({
       method: 'POST',
       url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/login',
       headers: {
@@ -91,13 +96,13 @@ const createWindow = () => {
       }
     })
     //request.write(args)
-    request.on('response', (response) => {
+    request.on('response',(response) => {
       console.log(`STATUS: ${response.statusCode}`)
       console.log(`HEADERS: ${JSON.stringify(response.headers)}`)
       response.on('data', (chunk) => {
         console.log(`BODY: ${chunk}`)
         //console.log(json.data.token)
-        var json = JSON.parse(chunk);
+        var json =  JSON.parse(chunk);
         if(response.statusCode == 200){
         token = json.data.token;
         id = json.data.usuari.id;
@@ -225,6 +230,7 @@ const createWindow = () => {
     console.log(args)
     console.log(token)
     console.log(id)
+    var res = ''
     const request = net.request({
       method: 'GET',
       url:'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments'
@@ -233,11 +239,12 @@ const createWindow = () => {
     request.on('response', (response) => {
      response.on('data', (chunk) => {
         //data.push(chunk)
-        var json = JSON.parse(chunk)
-          e.sender.send("channelList-r1",[id,json.data])
+        res += chunk
         
       })
       response.on('end', () => {
+        var json = JSON.parse(res)
+        e.sender.send("channelList-r1",[id,json.data])
         console.log('No more data in response.')
       })
     })

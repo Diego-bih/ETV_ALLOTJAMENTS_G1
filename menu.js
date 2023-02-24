@@ -41,6 +41,7 @@ const template = [
               modal:true,
               autoHideMenuBar:true
            })
+        win2.webContents.openDevTools()
          win2.loadFile('./html/login.html')
          module.exports = {
           win2
