@@ -1,0 +1,21 @@
+@import "node_modules\bootstrap\dist\css\bootstrap.css";
+body{
+    display: grid;
+    justify-content: center;
+    margin: 8px;
+}
+
+.container {
+    display: grid;
+    width: 100%;
+}
+.col {
+    float: left;
+    width: 50%;
+    background: #fff;
+    color: #ccc;
+    text-align: center;  
+    height: 50%;
+    font-size: 50vmin;
+    font-family: helvetica;
+  }
