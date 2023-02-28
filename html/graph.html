@@ -9,14 +9,18 @@
 </head>
 
 <body>
-    <div class="container container">
-        <div class="row">
-            <canvas class="col-sm-5" id="firstChart"></canvas>
-            <canvas class="col-sm-6" id="secondChart"></canvas>
+    <div class="container container" id="wrapper">
+        <div id="div1">
+            <canvas id="firstChart"></canvas>
         </div>
-        <div class="row">
-            <canvas class="col-sm-5" id="thirdChart"></canvas>
-            <canvas class="col-sm-6" id="forthChart"></canvas>
+        <div id="div2">
+            <canvas id="secondChart"></canvas>
+        </div>
+        <div id="div3">
+            <canvas id="thirdChart"></canvas>
+        </div>
+        <div id="div4">
+            <canvas id="forthChart"></canvas>
         </div>
     </div>
 </body>
@@ -25,4 +29,4 @@
     require('../renders/renderergraph.js')
 </script>
 
-</html> 
+</html>

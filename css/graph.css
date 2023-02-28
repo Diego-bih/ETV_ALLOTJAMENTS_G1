@@ -1,4 +1,52 @@
-@import "node_modules\bootstrap\dist\css\bootstrap.css";
+*{
+    box-sizing: border-box;
+}
+body .wrapper{
+    min-height: 85vh;
+    background: #DADADE;
+}
+
+#wrapper{
+    display: grid;
+    grid-template-columns: 1fr,1fr;
+    grid-template-rows:1fr,1fr ;
+    grid-template-areas: 
+    "box1 box2"
+    "box3 box4";
+    grid-gap: 20px;
+}
+
+#div1 {
+    grid-area: box1;
+    align-self: center;
+    justify-self: center;
+    width: 500px;
+    height: 500px;
+}
+#div2 {
+    grid-area: box2;
+    align-self: center;
+    justify-self: center;
+    width: 500px;
+    height: 500px;
+}
+#div3 {
+    grid-area: box3;
+    align-self: center;
+    justify-self: center;
+    width: 500px;
+    height: 500px;
+}
+#div4 {
+    grid-area: box4;
+    align-self: center;
+    justify-self: center;
+    width: 500px;
+    height: 500px;
+}
+
+
+/*
 body{
     display: grid;
     justify-content: center;
