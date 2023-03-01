@@ -193,6 +193,14 @@ ipcMain.on("channelPost", (e, args) => {
                 },
                 id: 'list',
                 role: "list"
+              },
+              {
+                label: "Charts",
+                click: () => {
+                  const { win } = require('./main.js')
+                  win.setMinimumSize(390, 620)
+                  win.loadFile('./html/graph.html')
+                }
               }
             ],
           role: 'admin'

@@ -50,15 +50,6 @@ const template = [
         id:'login',
         role: "login"
   },
-  {
-    label: "Charts",
-    click: () => {
-      const { win } = require('./main.js')
-      win.setMinimumSize(390, 620)
-      win.loadFile('./html/graph.html')
-    }
-  }
-  
 ]
 
 
