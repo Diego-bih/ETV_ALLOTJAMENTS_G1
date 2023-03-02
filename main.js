@@ -4,9 +4,6 @@ const { mainMenu, /*popupMenu*/} = require('./menu.js')
 require('@electron/remote/main').initialize()
 const { net } = require('electron');
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
 //Constant to create the window.
 var win;
 const createWindow = () => {
@@ -14,7 +11,6 @@ const createWindow = () => {
     webPreferences:{
         contextIsolation: false,
         nodeIntegration:true,
-        //enableRemoteModule: true
     },
     minWidth:390,
     minHeight: 620
@@ -23,12 +19,13 @@ const createWindow = () => {
     win.maximize()
     win.loadFile('./html/home.html')
     Menu.setApplicationMenu(mainMenu);
-    win.webContents.openDevTools()
+    //win.webContents.openDevTools()
     module.exports = {
         win
     }
+
+    //Handler to open child windows from renderer. Which are gonna be modal.
     win.webContents.setWindowOpenHandler(() => {
-      //if (url === '../html/create-car-group.html') {
         return {
           action: 'allow',
           overrideBrowserWindowOptions: {
@@ -40,12 +37,10 @@ const createWindow = () => {
             autoHideMenuBar:true,
           }
         }
-      //}
-      //return { action: 'deny' }
     })
-    //console.log(Menu.getApplicationMenu().getMenuItemById('login'))
   }
   
+  //ipcMain that shows a dialog when the user logs in.
   ipcMain.on("channelshowlogged", (e,args) => {
     electronDialog.showMessageBox(this.win, {
       'type': 'info',
@@ -55,8 +50,8 @@ const createWindow = () => {
   })
   })
 
+  //ipcMain that makes the api request to the endpoint that contains all the approved accomodations photos
   ipcMain.on("channelInfo",(e,args) =>{
-    console.log(args)
     var res = ''
     const request = net.request({
       method: 'GET',
@@ -65,12 +60,13 @@ const createWindow = () => {
 
     request.on('response', (response) => {
       response.on('data', (chunk) => {
-         //data.push(chunk)
-          //console.log(chunk)
+        //Since the response contains large amount of data. The chunk will be appended on a string and used on the end event
           res += chunk
       })
       response.on('end', () => {
+        //The data must be parsed
         var json = JSON.parse(res);
+        //The data is sended to the renderer
         e.sender.send("channelInfo-r1",json.data) 
         console.log('No more data in response.')
       })
@@ -79,13 +75,12 @@ const createWindow = () => {
     request.end()
   })
   
-  ipcMain.on("channellogin" , (e,args) => {
-    e.sender.send("channellogin-home", args)
-  })
-  
+  //Variables that are gonna be initialized i
   var token;
   var id;
   var win2
+
+  //ipcMain that makes the api request to the endpoint that is gonna post the information of the user's login
   ipcMain.on("channelPost",(e,args) =>{
     console.log(args)
     const request =  net.request({
@@ -103,12 +98,15 @@ const createWindow = () => {
         console.log(`BODY: ${chunk}`)
         //console.log(json.data.token)
         var json =  JSON.parse(chunk);
+        //If the response is 200 means the user is logged
         if(response.statusCode == 200){
+        //We assign the token and id of the user in the global variables
         token = json.data.token;
         id = json.data.usuari.id;
-          //Guardar usuario
           console.log(json.data.token)
-          const menu = Menu.getApplicationMenu(); // get default menu
+           // Get default menu
+          const menu = Menu.getApplicationMenu();
+          //Menu options as variables
           var dashboard = {
             label: 'Dashboard',
             role: 'dashboard'
@@ -130,18 +128,19 @@ const createWindow = () => {
                         contextIsolation: false,
                         nodeIntegration:true
                     },
-                      width: 700,
-                      height: 700,
-                      maxWidth:700,
-                      maxHeight:700,
+                      width:1000,
+                      height: 1000,
+                      maxWidth:1000,
+                      maxHeight:1000,
                       minWidth:320,
+                      minHeight:200,
                       center:true,
                       parent:win,
                       modal:true,
                       autoHideMenuBar:true
                    })
                   win2.loadFile('./html/create.html')
-                  win2.webContents.openDevTools()
+                  //win2.webContents.openDevTools()
                  },
                  id:'list',
                  role: "list"
@@ -164,6 +163,7 @@ const createWindow = () => {
               accelerator: "Control+e",
               role: 'logout',
               click: () => {
+                //Dialog with promise when users logs out
                 electronDialog.showMessageBox(this.win, {
                   'type': 'question',
                   'title': 'Confirmation',
@@ -173,16 +173,17 @@ const createWindow = () => {
                       'No'
                   ]
               })
-                  // Dialog returns a promise so let's handle it correctly
+                  // Dialog returns a promise so we handle it correctly
                   .then((result) => {
                       // Bail if the user pressed "No" or escaped (ESC) from the dialog box
                       if (result.response !== 0) { return; }
           
-                      // Testing.
+                      // If the result is yes we eliminate the menu options that are only available to the logged user
                       if (result.response === 0) {
                         const items = menu?.items.filter((item) => item.role !== 'logout' && item.role !== 'map' && item.role !== 'dashboard' && item.role !== 'admin')          
                         Menu.setApplicationMenu(Menu.buildFromTemplate(items))
                         win.loadFile('./html/home.html')
+                        //Dialog as a confirmation when the user logs out
                         electronDialog.showMessageBox(this.win, {
                           'type': 'info',
                           'title': 'Logged out',
@@ -196,27 +197,30 @@ const createWindow = () => {
               
             }
           
+          //When logged in we eliminate the login option from the menu
           const items = menu?.items.filter((item) => item.role !== 'login')
           
+          //And push the new menu options
           items.push(map)
           items.push(dashboard)
           items.push(admin)
           items.push(logout)
 
           Menu.setApplicationMenu(Menu.buildFromTemplate(items))
-
-          e.sender.send("channelPost-r", json.data.token)
+          
+          //Contact the renderer to handle the login dialog that is gonna be showed after being logged
+          e.sender.send("channelPost-r", true)
 
       }
         else if (response.statusCode == 400){
-          var error = true;
+          //Dialog when the credentials are wrong
           electronDialog.showMessageBox(this.win, {
             'type': 'error',
             'title': 'Error',
-            'message': "Error en credenciales",
+            'message': "Credencials incorrectes, torna a intentar-ho",
             'buttons': []
         })
-          e.sender.send("channelPost-r", error)      
+          e.sender.send("channelPost-r", false)      
         }
       })
       response.on('end', () => {
@@ -226,6 +230,7 @@ const createWindow = () => {
     request.end(args)
   })
 
+  //ipcMain that makes the api request to the endpoint that contains all the accomodations information
   ipcMain.on("channelList", (e,args) =>{
     console.log(args)
     console.log(token)
@@ -244,6 +249,7 @@ const createWindow = () => {
       })
       response.on('end', () => {
         var json = JSON.parse(res)
+        //We send the renderer the user's id and the data
         e.sender.send("channelList-r1",[id,json.data])
         console.log('No more data in response.')
       })
@@ -252,6 +258,7 @@ const createWindow = () => {
     request.end()
   })
 
+  //ipcMain that makes the api request to the endpoint that is gonna post the information of the edited accomodation
   ipcMain.on("channelEdit",(e,args) =>{
     console.log(args)
     console.log(token)
@@ -266,26 +273,36 @@ const createWindow = () => {
     })
 
     request.on('response', (response) => {
+      console.log(`STATUS: ${response.statusCode}`)
       response.on('data', (chunk) => {
          //data.push(chunk)
           var json = JSON.parse(chunk);
           if(response.statusCode == 200){
+            //Dialog when the accomodation is succesfully edited
             electronDialog.showMessageBox(this.win, {
               'type': 'info',
               'title': 'Info',
               'message': "Allotjament Editat",
               'buttons': []
           })
+            //We send to the renderer a confirmation that the accomodation is edited
             e.sender.send("channelEdit-r",true) 
           }else{
-            console.log(json.data)
+            //An error is thrown in the api while editing the accomodation, so we handle the returned information
+            var data =  json.data
+            var s = '';
+            //We get the information from the api's json and append it to a string
+            Object.keys(data).forEach(function(k){
+              var t = data[k];
+              s += t + '\n'
+          });
+          //Dialog that shows that there is an error while editing. Is gonna show where it went wrong.
             electronDialog.showMessageBox(this.win, {
               'type': 'error',
               'title': 'Error',
-              'message': "Error en editar",
+              'message': "Error en editar: " + '\n' + s,
               'buttons': []
           })
-
           }
           
       })
@@ -296,10 +313,13 @@ const createWindow = () => {
     console.log(args[1])
     request.end(args[1])
   })
+
+  //ipcMain that is gonna send the user's id
   ipcMain.on("channelIdCreate" , (e,args) => {
     e.sender.send("channelIdCreate-r", id)
   })
 
+  //ipcMain that makes the api request to the endpoint that is gonna post the information of the created accomodation
   ipcMain.on("channelCreate",(e,args) =>{
     console.log(args)
     const request = net.request({
@@ -316,6 +336,7 @@ const createWindow = () => {
          //data.push(chunk)
           var json = JSON.parse(chunk);
           if(response.statusCode == 200){
+            //Dialog when the accomodation is succesfully created
             electronDialog.showMessageBox(this.win, {
               'type': 'info',
               'title': 'Info',
@@ -324,11 +345,18 @@ const createWindow = () => {
           })
             e.sender.send("channelCreate-r",json.data) 
           }else{
-            console.log(json.data)
+            //An error is thrown in the api while creating the accomodation, so we handle the returned information
+            var data =  json.data
+            var s = '';
+            Object.keys(data).forEach(function(k){
+              var t = data[k];
+              s += t + '\n'
+          });
+          //Dialog that shows that there is an error while creating. Is gonna show where it went wrong.
             electronDialog.showMessageBox(this.win, {
               'type': 'error',
               'title': 'Error',
-              'message': "Error en crear",
+              'message': "Error en crear: " + '\n' + s,
               'buttons': []
           })
           }
@@ -343,7 +371,6 @@ const createWindow = () => {
   })
 
   //Initialize the application with the given window.
-  var data = []
   app.whenReady().then(() => {
       createWindow() 
   })

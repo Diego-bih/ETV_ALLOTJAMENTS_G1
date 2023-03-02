@@ -1,7 +1,11 @@
 const { ipcRenderer } = require('electron');
 const { Grid, h,html } = require('gridjs')
 
+//File of functions that are gonna render information dinamically
+
+//Function which is gonna display the information in the homepage
 function getInfo(info){
+        //Callback which is gonna set the data without duplicated information. Only just one photo for an accomodation
         var uniphoto = {}
         info = info.filter(function(cb) {
           if(cb.allotjament_id in uniphoto){
@@ -14,6 +18,7 @@ function getInfo(info){
         })
         console.log(info)
         let container = $('.cards')
+        //Iterating in the data and setting information inside the html code which means the information is gonna be displayed dinamically.
         for(var i = 0; i< info.length;i++){
         let obj = info[i];
         let li = $(`<li class="cards_item"></li>`)
@@ -25,14 +30,16 @@ function getInfo(info){
         let text2 = $(`<p class="card_text">Per ${obj.allotjament.npersones} persones</p>`)
         let text3 = $(`<p class="card_text">${obj.allotjament.descripcio}</p>`)
         let text4 = $(`<p class="card_text">Valoració: ${obj.allotjament.valoracio} estrelles</p>`)
-        let button = $(`<button class="btn card_btn">Llegir Més</button>`)
+        let button = $(`<button class="btn">Llegir Més</button>`)
         container.append(li.append(card.append(image,cardcontent.append(cardtitle,text,text2,text3,text4,button))))
       }
   }
 
+//Function which is gonna display the information of all the accomodations in a list
 function getList(id,info) {
   console.log(id)
   console.log(info[0].propietari.id)
+  //Use of grid.js library to make the table
   const grid = new Grid(
     {
       columns: [
@@ -41,6 +48,7 @@ function getList(id,info) {
        "descripcio",
        "nregistre",
        {
+        //Data for this column must be the owners id.
         data: (row) => row.propietari.id,
         name: 'Propietari',
 
@@ -48,20 +56,30 @@ function getList(id,info) {
        { 
         name: 'Actions',
         formatter: (cell, row) => {
-          //Obtener id de creador. Hacer if y que solo salgan botones en los que haya creado.
+          //If the row's data id is equal to the user's id
           if(row.cells[4].data == id){
+            //Return a button
             return h('button', {
               onClick: () =>{
-                //console.log(row.cells[4].data)
+                //Iterating in the data array of json
                 for(var i =0;i< info.length;i++){ 
+                  //If the rows owners id of the accomodation is equal to the id of the accomodation in the array of json
                   if(row.cells[0].data == info[i].id ){
                     var data = info[i]
                     console.log(data)
-                    var childwindow = window.open('../html/create.html','edit',)
+                    //Child window to open the html that is gonna work as an edit page
+                    var childwindow = window.open('../html/create.html','edit', 'width=1000,height=1000,maxWidth=1000,maxHeight=1000,minWidth=320,minHeight=200')
+                    //Load the respective data on the page
                     childwindow.onload = function(){
-                    childwindow.document.getElementById('title').innerHTML= "Editar Allotjament"
-                    childwindow.document.getElementById('h1').innerHTML= "Editar Allotjament"
+                      //First we change some elements of the page to make it as an edit page
+                    childwindow.document.getElementById('title').innerText= "Editar Allotjament"
+                    childwindow.document.getElementById('h1').innerText= "Editar Allotjament"
+                    childwindow.document.getElementById('nomlabel').innerText= "Nom (Must Change)"
+                    childwindow.document.getElementById('labelregistre').innerText= "Nº Registre (Must Change)"
+                    
+                    //The element value will be the respective value from the array. Done with the index
                     var nom = childwindow.document.getElementById("nom").value = data.nom
+                    //When the value is changed on the input, the new value is gonna be setted to the variable
                     childwindow.document.getElementById('nom').oninput = function() {
                       nom = childwindow.document.getElementById('nom').value
                     }    
@@ -130,48 +148,61 @@ function getList(id,info) {
                     childwindow.document.getElementById('latitud').oninput = function() {
                       latitud = childwindow.document.getElementById('latitud').value
                     }
-                    var edit = childwindow.document.getElementById('create')
-                  
-                    edit.addEventListener("click", function() {
-
-                        var obj = new Object()
-                        obj.nom = nom
-                        obj.descripcio = descripcio
-                        obj.nregistre = nregistre
-                        obj.npersones = npersones
-                        obj.nbanys = nbanys
-                        obj.nllits= nllits
-                        obj.nhabitacions = nhabitacions
-                        obj.carrer = carrer
-                        obj.numero = numero
-                        obj.pisporta = pisporta
-                        obj.municipi_id= municipi_id
-                        obj.tipus_allotjament_id = tipus_allotjament_id
-                        obj.tipus_vacances_id =tipus_vacances_id
-                        obj.propietari_id = propietari_id
-                        obj.categoria_id = categoria_id
-                        obj.longitud  = longitud
-                        obj.latitud = latitud 
-                        
-                        var json = JSON.stringify(obj)
-                        //console.log(json)
-                        ipcRenderer.send("channelEdit",[data.id,json])
+                      var forms = childwindow.document.querySelectorAll('.needs-validation')
                     
-                    })
+                      Array.prototype.slice.call(forms)
+                        .forEach(function (form) {
+                          form.addEventListener('submit', function (event) {
+                            if (!form.checkValidity()) {
+                              event.preventDefault()
+                              event.stopPropagation()
+                            }else{
+                              form.classList.add('was-validated')
+                              //Turn the values into an object
+                              var obj = new Object()
+                              obj.nom = nom
+                              obj.descripcio = descripcio
+                              obj.nregistre = nregistre
+                              obj.npersones = npersones
+                              obj.nbanys = nbanys
+                              obj.nllits= nllits
+                              obj.nhabitacions = nhabitacions
+                              obj.carrer = carrer
+                              obj.numero = numero
+                              obj.pisporta = pisporta
+                              obj.municipi_id= municipi_id
+                              obj.tipus_allotjament_id = tipus_allotjament_id
+                              obj.tipus_vacances_id =tipus_vacances_id
+                              obj.propietari_id = propietari_id
+                              obj.categoria_id = categoria_id
+                              obj.longitud  = longitud
+                              obj.latitud = latitud 
+                              var json = JSON.stringify(obj)
+                              console.log(json)
+                              //The accomodation's id is send to the main with the data
+                              ipcRenderer.send("channelEdit",[data.id,json])
+                            }
+                          }, false)
+                        })
+                    
+                    //If the accomodation is succesfully edited, we receive the permit to close the child window and refresh the page with the new data
                     ipcRenderer.on("channelEdit-r",(e,args) => {
-                      childwindow.close()
-                      document.location = document.location
+                      //Timeout to handle the child window closing before receiving context
+                        setTimeout(() => {
+                          childwindow.close()
+                          document.location = document.location
+                        }, 1000);     
                     })
                     }
                   }
                 }
-                /*console.log(info[12])
-                console.log('klk')*/
                 }
             }, 'Edit')
           {
          ;}
-        }else{
+        }
+        //If rows owner id isn't the same as the user's id, we can not edit any other accomodation. Only the ones that we create.
+        else{
           return html('<div>No editable</div>')
         }
         } },
@@ -182,9 +213,11 @@ function getList(id,info) {
           'placeholder': `La teva ID de propietari es: ${id}`
         }
       },
-      pagination: true,
+      pagination: {
+        limit:8
+      },
       sort: true,
-      height: 548,
+      //We handle the json data and it will automatically fit into their respective column.
       data: () => {
         return new Promise(resolve => {
           setTimeout(()=>resolve(info),1000)

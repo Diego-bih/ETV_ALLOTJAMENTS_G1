@@ -19,23 +19,6 @@
     font-weight: 400;
     text-align: center;
 }
-  /*Column for the label. To make responsive functionality*/
-  
-  /*.col-25 {
-      color: #ffffff;
-      float: left;
-      width: 25%;
-      margin-top: 6px;
-      text-align: center;
-    }*/
-    
-  /*Column for the input.To make responsive functionality*/
-   /* .col-75 {
-      float: left;
-      width: 75%;
-      margin-top: 6px;
-      text-align: center;
-    }*/
   
    input[type=submit] {
     display: block;
@@ -49,11 +32,6 @@
     cursor: pointer;
     overflow:auto;
   }
-
-  /*.login{
-    position: relative;
-    top: 8px;
-  }*/
   
   /*Hover for the submit button*/
   input[type=submit]:hover {
@@ -65,19 +43,10 @@
       padding: 50px;
     }
   
-    /*Clear floats after the columns*/
-    /*
-    .row:after {
-      content: "";
-      display: table;
-      clear: both;
-    }*/
-    
-    
-    /* Responsive layout: when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
-    
+
+    /*Responsive layout: when the screen is less than 600px wide, make the button width to fit in the container */   
     @media screen and (max-width: 480px) {
-      /*.col-25, .col-75, */input[type=submit] {
+      input[type=submit] {
         width: 100%;
         margin-top: 0;
       }
