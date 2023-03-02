@@ -49,8 +49,7 @@ const template = [
         },
         id:'login',
         role: "login"
-  }
-  
+  },
 ]
 
 
