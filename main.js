@@ -40,6 +40,42 @@ const createWindow = () => {
     })
   }
   
+  ipcMain.on('ch1', (event, args) => {
+    const request = net.request({
+      url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/comentaris',
+      method: 'GET',
+    })
+    request.on('response', (response) => {
+      ress = "";
+      console.log(`STATUS: ${response.statusCode}`)
+      response.on('data', async (chunk) => {
+        ress += chunk;
+      })
+      response.on('end', () => {
+        event.sender.send('ch2', ress);
+      })
+    })
+    request.end()
+  },)
+  
+  ipcMain.on('ch3', (event, args) => {
+    const request = net.request({
+      url: 'http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments',
+      method: 'GET',
+    })
+    request.on('response', (response) => {
+      ress = "";
+      console.log(`STATUS: ${response.statusCode}`)
+      response.on('data', (chunk) => {
+        ress += chunk;
+      })
+      response.on('end', () => {
+        event.sender.send('ch4', ress);
+      })
+    })
+    request.end()
+  },)
+
   //ipcMain that shows a dialog when the user logs in.
   ipcMain.on("channelshowlogged", (e,args) => {
     electronDialog.showMessageBox(this.win, {
@@ -109,6 +145,11 @@ const createWindow = () => {
           //Menu options as variables
           var dashboard = {
             label: 'Dashboard',
+            click: () => {
+              const { win } = require('./main.js')
+              win.setMinimumSize(390, 620)
+              win.loadFile('./html/graph.html')
+            },
             role: 'dashboard'
           }
           var map = {
