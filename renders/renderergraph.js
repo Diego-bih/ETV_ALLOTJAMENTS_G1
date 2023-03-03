@@ -11,11 +11,15 @@ ipcRenderer.send('ch1', true);
 
 const tpus_a = [];
 
+
+
+//In this chart we get the response of the API and we parse it to feed it to the chart.
 let firstChart;
 ipcRenderer.on('ch2', async (event, resposta) => {
 
     var data = resposta.data
 
+    //With this try catch we make sure that if we didnt get the data we do the petition again
     try {
 
         data = await JSON.parse(resposta).data
@@ -28,6 +32,7 @@ ipcRenderer.on('ch2', async (event, resposta) => {
     var ldata = [];
     var s = [0, 0, 0, 0, 0];
 
+    //Here we preare the data to feed it to the chart.
     for (var valor of data) {
         var valora = valor["valoracio"];
         switch (valora) {
@@ -53,9 +58,12 @@ ipcRenderer.on('ch2', async (event, resposta) => {
     lbl.push('1 Star', '2 Stars', '3 Stars', '4 Stars', '5 Stars');
     ldata.push(s[0], s[1], s[2], s[3], s[4],);
 
+
     if (firstChart) {
         firstChart.destroy();
     }
+
+    console.log(lbl)
 
     firstChart = new Chart(ctx, {
         type: 'bar',
@@ -101,6 +109,7 @@ ipcRenderer.on('ch4', async (event, resposta) => {
         await ipcRenderer.send('ch3', true);
     }
 
+    //Here we preare the data to feed it to the chart.
     var lbl = [];
     var s = [];
     const set = new Set(s);
@@ -110,6 +119,7 @@ ipcRenderer.on('ch4', async (event, resposta) => {
         s.push(valor['nhabitacions']);
     }
 
+    //We make sure that we get each element with no duplicates for the labels of the chart using set
     var objList = countSame(s);
     let i = set.keys();
     for (var v of i) {
@@ -128,7 +138,7 @@ ipcRenderer.on('ch4', async (event, resposta) => {
         data: {
             labels: sortedLbl,
             datasets: [{
-                label: 'Nombre d\'allotjaments ',
+                label: 'Nombre d\'allotjaments',
                 borderWidth: 1,
                 data: sortedData,
             }]
@@ -157,6 +167,7 @@ ipcRenderer.on('ch4', async (event, resposta) => {
         s2.push(valor['propietari_id']);
     }
 
+    //Here we preare the data to feed it to the chart.
     var objList2 = countSame(s2);
     let i2 = set2.keys();
     for (var v of i2) {
@@ -196,6 +207,7 @@ ipcRenderer.on('ch4', async (event, resposta) => {
     var s3 = [];
     const set3 = new Set(s3);
 
+    //Here we preare the data to feed it to the chart.
     for (var valor of data) {
         set3.add(valor['npersones']);
         s3.push(valor['npersones']);
@@ -222,7 +234,7 @@ ipcRenderer.on('ch4', async (event, resposta) => {
         data: {
             labels: sortedLbl3,
             datasets: [{
-                label: 'Nombre',
+                label: 'Nombre d\'allotjaments',
                 data: sortedData3,
                 borderWidth: 1
             }]
@@ -236,7 +248,7 @@ ipcRenderer.on('ch4', async (event, resposta) => {
                 }
             },
             plugins: {
-                title: { text: 'Nombre de persones:', display: true },
+                title: { text: 'Nombre de persones per allotjament:', display: true },
             },
         }
     });

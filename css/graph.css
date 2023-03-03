@@ -1,18 +1,24 @@
-*{
+* {
     box-sizing: border-box;
 }
-body .wrapper{
+
+
+html {
+    background-color: #ecf9ff;
+}
+
+body .wrapper {
     min-height: 85vh;
     background: #DADADE;
 }
 
-#wrapper{
+#wrapper {
     display: grid;
-    grid-template-columns: 1fr,1fr;
-    grid-template-rows:1fr,1fr ;
-    grid-template-areas: 
-    "box1 box2"
-    "box3 box4";
+    grid-template-columns: 1fr, 1fr;
+    grid-template-rows: 1fr, 1fr;
+    grid-template-areas:
+        "box1 box2"
+        "box3 box4";
     grid-gap: 20px;
 }
 
@@ -20,9 +26,10 @@ body .wrapper{
     grid-area: box1;
     align-self: center;
     justify-self: center;
-    width: 500px;
-    height: 500px;
+    width: 300px;
+    height: 300px;
 }
+
 #div2 {
     grid-area: box2;
     align-self: center;
@@ -30,6 +37,7 @@ body .wrapper{
     width: 500px;
     height: 500px;
 }
+
 #div3 {
     grid-area: box3;
     align-self: center;
@@ -37,6 +45,7 @@ body .wrapper{
     width: 500px;
     height: 500px;
 }
+
 #div4 {
     grid-area: box4;
     align-self: center;
@@ -45,19 +54,30 @@ body .wrapper{
     height: 500px;
 }
 
-.col-1{width: 25%;}
-.col-2{width: 50%;}
-.col-3{width: 75%;}
-.col-4{width: 100%;}
+.col-1 {
+    width: 25%;
+}
 
-[class*="col-"]{
+.col-2 {
+    width: 50%;
+}
+
+.col-3 {
+    width: 75%;
+}
+
+.col-4 {
+    width: 100%;
+}
+
+[class*="col-"] {
     float: left;
-    padding: 5px;
-    border: 1px solid black;
+    padding: 25px;
+    margin: auto;
 }
 
 .row::after {
     content: "";
     clear: both;
     display: table;
-  }
+}
