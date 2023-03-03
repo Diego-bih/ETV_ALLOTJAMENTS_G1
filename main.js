@@ -453,7 +453,7 @@ async function createMap() {
 
   wcMap = mapWin.webContents
   console.log(wcMap.session.getStoragePath())
-  wcMap.openDevTools()
+  //wcMap.openDevTools()
 
 }
 
@@ -477,7 +477,7 @@ async function createHabitacioWin() {
   await roomWin.loadFile("./html/hotel.html")
 
   wcNew = roomWin.webContents
-  wcNew.openDevTools()
+  //wcNew.openDevTools()
 
 }
 
