@@ -26,8 +26,8 @@ body .wrapper {
     grid-area: box1;
     align-self: center;
     justify-self: center;
-    width: 300px;
-    height: 300px;
+    width: 500px;
+    height: 500px;
 }
 
 #div2 {
