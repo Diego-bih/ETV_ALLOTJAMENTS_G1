@@ -66,11 +66,11 @@ ipcRenderer.on('ch2', async (event, resposta) => {
     console.log(lbl)
 
     firstChart = new Chart(ctx, {
-        type: 'radar',
+        type: 'bar',
         data: {
             labels: lbl,
             datasets: [{
-                label: 'Valoracions',
+                label: 'Quantitat',
                 data: ldata,
                 borderWidth: 1
             }]
