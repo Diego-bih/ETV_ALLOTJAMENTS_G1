@@ -21,6 +21,7 @@ function getInfo(info){
         //Iterating in the data and setting information inside the html code which means the information is gonna be displayed dinamically.
         for(var i = 0; i< info.length;i++){
         let obj = info[i];
+        let id = obj.allotjament.id;
         let li = $(`<li class="cards_item"></li>`)
         let card = $(`<div class ="card"></div>`)
         let image = $(`<div class="card_image"><img src="${obj.url}" style="width:100%"></div>`)
@@ -29,11 +30,15 @@ function getInfo(info){
         let text = $(`<p class="card_text">${obj.allotjament.municipi.municipi}</p>`)
         let text2 = $(`<p class="card_text">Per ${obj.allotjament.npersones} persones</p>`)
         let text3 = $(`<p class="card_text">${obj.allotjament.descripcio}</p>`)
-        let text4 = $(`<p class="card_text">Valoració: ${obj.allotjament.valoracio} estrelles</p>`)
-        let button = $(`<button class="btn">Llegir Més</button>`)
+        let text4 = $(`<span class="card_text">Valoració: ${obj.allotjament.valoracio}</span>&nbsp;<img class="icon" src="../assets/star.png">`)
+        let button = $(`<button class="btn" onclick="verAloja('${id}')">Llegir Més</button>`)
         container.append(li.append(card.append(image,cardcontent.append(cardtitle,text,text2,text3,text4,button))))
       }
   }
+
+  function verAloja(id){
+    ipcRenderer.send("request1",(id))
+}
 
 //Function which is gonna display the information of all the accomodations in a list
 function getList(id,info) {

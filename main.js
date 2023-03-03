@@ -154,7 +154,7 @@ const createWindow = () => {
           }
           var map = {
             label: 'Map',
-            role: 'map'
+            id: 'map'
           }
           var admin =
           {
@@ -247,7 +247,14 @@ const createWindow = () => {
           items.push(admin)
           items.push(logout)
 
-          Menu.setApplicationMenu(Menu.buildFromTemplate(items))
+          const tempMenu = Menu.buildFromTemplate(items);
+          itemList = tempMenu.getMenuItemById('map')
+          itemList.click = () => {
+           createMap()
+          }
+          
+
+          Menu.setApplicationMenu(tempMenu)
           
           //Contact the renderer to handle the login dialog that is gonna be showed after being logged
           e.sender.send("channelPost-r", true)
@@ -418,6 +425,88 @@ const createWindow = () => {
 
   app.on('browser-window-created', (_, window) => {
     require("@electron/remote/main").enable(window.webContents)
+})
+
+
+let mapWin
+let wcMap
+//new window for room
+async function createMap() {
+  mapWin = new BrowserWindow({
+    webPreferences: {
+      contextIsolation: false,
+      nodeIntegration: true
+    },
+    width: 1200, height: 800,
+    minWidth: 600, minHeight: 400,
+    center: true,
+    parent: win,
+    modal: true,
+    show: false,
+    autoHideMenuBar: true
+  })
+  await mapWin.loadFile('./html/map.html')
+
+  mapWin.once("ready-to-show", () => {
+    mapWin.show()
+  })
+
+  wcMap = mapWin.webContents
+  console.log(wcMap.session.getStoragePath())
+  wcMap.openDevTools()
+
+}
+
+
+let roomWin
+let wcNew
+//new window for room
+async function createHabitacioWin() {
+  roomWin = new BrowserWindow({
+    width: 1200, height: 800,
+    minWidth: 300, minHeight: 150,
+    parent: win,
+    modal: true,
+    webPreferences: {
+      contextIsolation: false,
+      nodeIntegration: true,
+    },
+    show: false,
+    autoHideMenuBar: true
+  })
+  await roomWin.loadFile("./html/hotel.html")
+
+  wcNew = roomWin.webContents
+  wcNew.openDevTools()
+
+}
+
+ipcMain.on("request1", async (e, id) => {
+  await createHabitacioWin()
+  roomWin.show()
+
+  const request = net.request({
+    method: 'GET',
+    url: `http://etv.dawpaucasesnoves.com/etvServidor/public/api/allotjaments/${id}`
+  })
+
+  request.on('response', (response) => {
+    console.log(`STATUS: ${response.statusCode}`)
+
+    response.on("data", (chunk) => {
+      var json = JSON.parse(chunk);
+      console.log(json)
+      roomWin.send("request-res", json)
+
+    })
+
+    response.on('end', () => {
+      console.log('No more data in response2.')
+    })
+  })
+  request.end()
+  console.log("sale")
+
 })
 
   //Disable security warning showed on console.log

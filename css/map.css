@@ -1,0 +1,29 @@
+#map{
+    margin: 40px;
+    width: 900px;
+    height: 800px;
+}
+
+@import url('https://fonts.googleapis.com/css?family=Quicksand:400,700');
+
+/* Design */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: #ecf9ff;
+}
+
+#principal {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  align-items: center;
+  align-content: center;
+  background-color: #e91e63;
+  background: linear-gradient(to bottom left, #EF8D9C 40%, #FFC39E 100%);
+  font-family: 'Quicksand', serif;
+}

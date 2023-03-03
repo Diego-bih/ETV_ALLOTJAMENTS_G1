@@ -16,6 +16,10 @@
         </div>
     </body>
     <script>
+        const { ipcRenderer } = require("electron");
         require('../renders/renderhome.js')
+        function verAloja(id){
+         ipcRenderer.send("request1",(id))
+        }
     </script>
 </html>
