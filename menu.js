@@ -2,6 +2,7 @@ const { app, Menu, BrowserWindow } = require('electron')
 
 const isMac = process.platform === 'darwin'
 
+//Template that contains some menu options
 const template = [
   // { role: 'appMenu' }
   ...(isMac ? [{
@@ -12,7 +13,6 @@ const template = [
       { role: 'quit' }
     ]
   }] : []),
-  //Label Home which is gonna load the home html.
   {
     label: 'Home',
     click: () => {
@@ -32,16 +32,16 @@ const template = [
           nodeIntegration: true
         },
         width: 700,
-        height: 450,
+        height: 430,
         maxWidth: 700,
-        maxHeight: 530,
+        maxHeight: 430,
         minWidth: 320,
+        minHeight: 250,
         center: true,
         parent: win,
         modal: true,
         autoHideMenuBar: true
       })
-      win2.webContents.openDevTools()
       win2.loadFile('./html/login.html')
       module.exports = {
         win2
@@ -49,7 +49,7 @@ const template = [
     },
     id: 'login',
     role: "login"
-  },
+  }
 ]
 
 

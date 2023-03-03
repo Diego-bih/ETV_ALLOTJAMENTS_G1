@@ -70,7 +70,7 @@ ipcRenderer.on('ch2', async (event, resposta) => {
         data: {
             labels: lbl,
             datasets: [{
-                label: 'stars',
+                label: 'Quantitat',
                 data: ldata,
                 borderWidth: 1
             }]
