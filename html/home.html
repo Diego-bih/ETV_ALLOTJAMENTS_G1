@@ -17,5 +17,17 @@
     </body>
     <script>
         require('../renders/renderhome.js')
+        const { ipcRenderer } = require("electron");
+        function verAloja(id){
+            ipcRenderer.send("request1",(id))
+        }   
     </script>
 </html>
+
+<script>
+    const { ipcRenderer } = require("electron");
+    require('../renders/renderhome.js')
+    function verAloja(id){
+        ipcRenderer.send("request1",(id))
+    }
+</script>

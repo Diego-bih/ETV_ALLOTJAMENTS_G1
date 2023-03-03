@@ -37,6 +37,11 @@ img {
   vertical-align: middle;
 }
 
+.icon{
+  width: 15px;
+  height: 15px;
+}
+
 .btn {
   color: #ffffff;
   padding: 0.8rem;
