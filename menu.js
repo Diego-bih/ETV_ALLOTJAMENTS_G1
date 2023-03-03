@@ -1,4 +1,4 @@
-const { app, Menu, BrowserWindow} = require('electron')
+const { app, Menu, BrowserWindow } = require('electron')
 
 const isMac = process.platform === 'darwin'
 
@@ -16,39 +16,39 @@ const template = [
   {
     label: 'Home',
     click: () => {
-        const {win} = require('./main.js')
-        win.setMinimumSize(390,620)
-        win.loadFile('./html/home.html')
+      const { win } = require('./main.js')
+      win.setMinimumSize(390, 620)
+      win.loadFile('./html/home.html')
     },
     accelerator: "Control+h"
   },
   {
-    label:"Login",
-        click: () => { 
-          const {win} = require('./main.js')
-          const win2 = new BrowserWindow({
-            webPreferences:{
-                contextIsolation: false,
-                nodeIntegration:true
-            },
-              width: 700,
-              height: 450,
-              maxWidth:700,
-              maxHeight:530,
-              minWidth:320,
-              center:true,
-              parent:win,
-              modal:true,
-              autoHideMenuBar:true
-           })
-        win2.webContents.openDevTools()
-         win2.loadFile('./html/login.html')
-         module.exports = {
-          win2
-         }
+    label: "Login",
+    click: () => {
+      const { win } = require('./main.js')
+      const win2 = new BrowserWindow({
+        webPreferences: {
+          contextIsolation: false,
+          nodeIntegration: true
         },
-        id:'login',
-        role: "login"
+        width: 700,
+        height: 450,
+        maxWidth: 700,
+        maxHeight: 530,
+        minWidth: 320,
+        center: true,
+        parent: win,
+        modal: true,
+        autoHideMenuBar: true
+      })
+      win2.webContents.openDevTools()
+      win2.loadFile('./html/login.html')
+      module.exports = {
+        win2
+      }
+    },
+    id: 'login',
+    role: "login"
   },
 ]
 
