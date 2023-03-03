@@ -2,7 +2,6 @@
     box-sizing: border-box;
 }
 
-
 html {
     background-color: #ecf9ff;
 }
@@ -10,6 +9,8 @@ html {
 body .wrapper {
     min-height: 85vh;
     background: #DADADE;
+    align-self: center;
+    justify-self: center;
 }
 
 #wrapper {
@@ -20,6 +21,8 @@ body .wrapper {
         "box1 box2"
         "box3 box4";
     grid-gap: 20px;
+    align-self: center;
+    justify-self: center;
 }
 
 #div1 {
